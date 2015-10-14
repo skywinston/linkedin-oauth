@@ -2,9 +2,10 @@ extends layout
 
 block content
   h1= title
-  if user
-    p Hello #{user.displayName}
-    a(href='/logout') Logout
+  if profile
+    img(src=profile.pictureUrl)
+    p
+      a(href='/logout') Logout
   else
     p
       a(href='/auth/linkedin') Login
