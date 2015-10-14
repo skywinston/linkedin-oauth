@@ -7,6 +7,7 @@ var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+var db = require('monk')(process.env.DB_URI || 'mongodb://localhost/linkedin-oauth2-exercise');
 
 var routes = require('./routes/index');
 
@@ -39,6 +40,15 @@ passport.use(new LinkedInStrategy({
 }, function(accessToken, refreshToken, profile, done) {
   // asynchronous verification, for effect...
   process.nextTick(function () {
+    // working on adding users returned profile to the db
+    console.log(profile.id);
+    db.users.update({linkedInProfile : profile.id},
+      {
+        linkedInProfile : profile.id,
+        displayName : profile.displayName,
+        profilePhotoUrl : profile.photos[0].value
+      },
+      {upsert: true});
     // To keep the example simple, the user's LinkedIn profile is returned to
     // represent the logged-in user. In a typical application, you would want
     // to associate the LinkedIn account with a user record in your database,
