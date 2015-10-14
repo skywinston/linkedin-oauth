@@ -7,7 +7,7 @@ var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-var db = require('monk')(process.env.DB_URI || 'mongodb://localhost/linkedin-oauth2-exercise');
+var db = require('monk')(process.env.MONGOLAB_URI || 'mongodb://localhost/linkedin-oauth2-exercise');
 
 var routes = require('./routes/index');
 
