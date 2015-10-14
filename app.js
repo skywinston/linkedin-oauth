@@ -3,7 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var session = require('cookie-session');
+var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
@@ -19,16 +19,17 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({
-  keys: ['Luminous Domepiece']
+app.use(cookieSession({
+  name: 'session',
+  keys: ["LuminousDomepice", "whatever"]
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
 passport.use(new LinkedInStrategy({
   clientID: process.env.LINKEDIN_KEY,
   clientSecret: process.env.LINKEDIN_SECRET,
@@ -42,7 +43,7 @@ passport.use(new LinkedInStrategy({
     // represent the logged-in user. In a typical application, you would want
     // to associate the LinkedIn account with a user record in your database,
     // and return that user instead.
-    return done(null, profile);
+    return done(null, {id: profile.id, displayName: profile.displayName});
   });
 }));
 
@@ -69,6 +70,7 @@ app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
   successRedirect: '/',
   failureRedirect: '/login'
 }));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
