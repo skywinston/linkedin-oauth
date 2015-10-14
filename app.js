@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 var db = require('monk')(process.env.MONGOLAB_URI || 'mongodb://localhost/linkedin-oauth2-exercise');
+var users = db.get('users');
 
 var routes = require('./routes/index');
 
@@ -40,9 +41,9 @@ passport.use(new LinkedInStrategy({
 }, function(accessToken, refreshToken, profile, done) {
   // asynchronous verification, for effect...
   process.nextTick(function () {
-    // working on adding users returned profile to the db
+    // Adds the LinkedIn Profile info to the users DB record
     console.log(profile.id);
-    db.users.update({linkedInProfile : profile.id},
+    users.update({linkedInProfile : profile.id},
       {
         linkedInProfile : profile.id,
         displayName : profile.displayName,
