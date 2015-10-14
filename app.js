@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
-  keys: ["LuminousDomepice", "whatever"]
+  keys: [process.env.KEY1, process.env.KEY2]
 }));
 app.use(passport.initialize());
 app.use(passport.session());
